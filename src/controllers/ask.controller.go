@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type RequestBody struct {
+type AskRequestBody struct {
 	Prompt string `json:"prompt"`
 }
 
@@ -23,7 +23,7 @@ func Ask(c *gin.Context) {
 		return
 	}
 
-	var requestBody RequestBody
+	var requestBody AskRequestBody
 	if err := json.Unmarshal(bodyBytes, &requestBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
 		return
