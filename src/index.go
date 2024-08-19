@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/daily-utils/iLLM-backend/src/utils"
+	"github.com/daily-utils/iLLM-backend/src/controllers"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -37,7 +38,7 @@ func Run() {
 	})
 
 	// add routers
-	
+	route.POST("/ask", controllers.Ask)
 
 	route.Run(":8090")
 }

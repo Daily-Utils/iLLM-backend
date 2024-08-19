@@ -1,7 +1,7 @@
 package models
 
 type Ask struct {
-	model  string
-	prompt string
-	stream bool
+    Model  string `json:"model"`
+    Prompt string `json:"prompt"`
+    Stream bool   `json:"stream"`
 }
