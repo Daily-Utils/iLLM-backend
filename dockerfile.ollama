@@ -10,9 +10,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sSL https://ollama.com/install.sh | sh
 
 # Expose the port Ollama API will run on
-EXPOSE 8080
-
-RUN ollama serve
+EXPOSE 11434
 
 # Command to run Ollama API
-CMD ["ollama", "run", "llama3"]
+CMD ["ollama", "serve"]
