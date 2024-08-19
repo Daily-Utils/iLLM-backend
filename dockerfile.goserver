@@ -1,6 +1,4 @@
-# Use an official Golang runtime as a parent image
-FROM golang:1.20
-
+FROM golang:1.23
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
@@ -13,11 +11,11 @@ RUN go mod download
 # Copy the source from the current directory to the Working Directory inside the container
 COPY . .
 
-# Install Ollama CLI
-RUN curl -sSL https://ollama.com/install.sh | sh
+# Build the Go app
+RUN go build -o main .
 
-# Expose the port Ollama API will run on
+# Expose port 8080 to the outside world
 EXPOSE 8080
 
-# Command to run Ollama API
-CMD ["ollama", "serve"]
+# Command to run the executable
+CMD ["./main"]

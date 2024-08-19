@@ -1,0 +1,14 @@
+services:
+  ollama:
+    build:
+      context: .
+      dockerfile: dockerfile.ollama
+    ports:
+      - "8080:11434"
+
+  go-server:
+    build:
+      context: .
+      dockerfile: dockerfile.goserver
+    ports:
+      - "8081:8080"
