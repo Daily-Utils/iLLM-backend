@@ -39,6 +39,7 @@ func Run() {
 
 	// add routers
 	route.POST("/ask", controllers.Ask)
+	route.POST("/context", controllers.ProvideContext)
 
 	route.Run(":8090")
 }
