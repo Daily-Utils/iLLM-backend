@@ -1,0 +1,16 @@
+# Use an official Ubuntu runtime as a parent image
+FROM ubuntu:20.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Ollama CLI
+RUN curl -sSL https://ollama.com/install.sh | sh
+
+# Expose the port Ollama API will run on
+EXPOSE 11434
+
+# Command to run Ollama API
+CMD ["ollama", "serve"]
