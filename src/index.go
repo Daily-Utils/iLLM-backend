@@ -1,7 +1,10 @@
 package src
 
 import (
+	"time"
+
 	"github.com/daily-utils/iLLM-backend/src/utils"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,6 +14,15 @@ func Run() {
 	route := gin.Default()
 	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
 	route.Use(utils.Logger())
+
+	route.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	route.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
