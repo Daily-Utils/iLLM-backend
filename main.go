@@ -1,17 +1,9 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/daily-utils/iLLM-backend/src"
 )
 
 func main() {
-	r := gin.Default()
-
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Server is running",
-		})
-	})
-
-	r.Run(":8080")
+	src.Run()
 }
