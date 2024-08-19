@@ -9,6 +9,7 @@ func Run() {
 	utils.LoadEnv()
 
 	route := gin.Default()
+	route.Use(utils.Logger())
 
 	route.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -17,7 +18,6 @@ func Run() {
 	})
 
 	// add routers
-	
 
-	route.Run(":8080")
+	route.Run(":8090")
 }
