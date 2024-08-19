@@ -9,7 +9,14 @@ func Run() {
 	utils.LoadEnv()
 
 	route := gin.Default()
+	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
 	route.Use(utils.Logger())
+
+	route.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "This is default base route for go server",
+		})
+	})
 
 	route.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
