@@ -6,15 +6,18 @@ import (
 	"net/http"
 
 	// "github.com/daily-utils/iLLM-backend/src/models"
+	"github.com/daily-utils/iLLM-backend/src/utils"
 	"github.com/gin-gonic/gin"
 )
 
 type ContextRequestBody struct {
-	FilePath string `json:"filePath"`
+	ContextProvided string `json:"contextProvider"`
+	IsLink          bool   `json:"isLink"`
+	DomainOfProvider string `json:"domainOfProvider"`
 }
 
-func ProvideContext(c *gin.Context){
-	bodyBytes , err := ioutil.ReadAll(c.Request.Body)
+func ProvideContext(c *gin.Context) {
+	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
@@ -27,7 +30,21 @@ func ProvideContext(c *gin.Context){
 		return
 	}
 
-	// hit the api
+	// check for kind of context
+	if requestBody.IsLink {
+		linkContext, err := utils.GetTextFromLink(requestBody.ContextProvided, requestBody.DomainOfProvider)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"response": linkContext})
+	}
 
-	c.JSON(http.StatusOK, gin.H{"filePath": requestBody.FilePath})
+	fileContext, err := utils.ExtractTextFromPDF(requestBody.ContextProvided)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"response": fileContext})
 }

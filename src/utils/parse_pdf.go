@@ -1,58 +1,31 @@
 package utils
 
 import (
-	"encoding/json"
-	"fmt"
-	"os"
-
-	"github.com/unidoc/unipdf/v3/extractor"
-	"github.com/unidoc/unipdf/v3/model"
+    "bytes"
+    "fmt"
+    "github.com/martoche/pdf"
 )
 
-func ParsePDFToString(filePath string) (string, error) {
-	// Read the PDF file
-    file, err := os.Open(filePath)
+func ExtractTextFromPDF(filePath string) (string, error) {
+    // Open the PDF file
+    r, err := pdf.Open(filePath)
     if err != nil {
-		return "", fmt.Errorf("failed to read file: %v", err)
+        return "", fmt.Errorf("failed to open PDF file: %v", err)
     }
-	defer file.Close()
 
-	pdfReader, err := model.NewPdfReader(file)
-	if err != nil {
-		return "", fmt.Errorf("failed to create pdf reader: %v", err)
-	}
+    // Get plain text from the PDF
+    p, err := r.GetPlainText()
+    if err != nil {
+        return "", fmt.Errorf("failed to get plain text from PDF: %v", err)
+    }
 
-	numPages, err := pdfReader.GetNumPages()
+    // Check the type assertion
+    buf, ok := p.(*bytes.Buffer)
+    if !ok {
+        return "", fmt.Errorf("the library no longer uses bytes.Buffer to implement io.Reader")
+    }
 
-	if err != nil {
-		return "", fmt.Errorf("failed to get number of pages: %v", err)
-	}
-
-	text := ""
-	textArr := []string{}
-	for i := 0; i < min(numPages, 60); i++ {
-		pageNum := i + 1
-		page, err := pdfReader.GetPage(pageNum)
-		if err != nil {
-			return "", fmt.Errorf("failed to get page: %v", err)
-		}
-		ex, err := extractor.New(page)
-		if err != nil {
-			return "", fmt.Errorf("failed to create text extractor: %v", err)
-		}
-		pageText, err := ex.ExtractText()
-		if err != nil {
-			return "", fmt.Errorf("failed to extract text: %v", err)
-		}
-		text += pageText
-		textArr = append(textArr, pageText)
-		text = ""
-	}
-
-	jsonText, err := json.Marshal(textArr)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal text: %v", err)
-	}
-	
-	return string(jsonText), nil
+    // Return the extracted text as a string
+    return buf.String(), nil
 }
+
