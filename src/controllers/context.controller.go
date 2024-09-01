@@ -17,6 +17,24 @@ type ContextRequestBody struct {
 	DomainOfProvider string `json:"domainOfProvider"`
 }
 
+type ContextResponseBody struct {
+	Response string `json:"response"`
+}
+
+type ContextErrorResponseBody struct {
+	Error string `json:"error"`
+}
+
+// Context godoc
+// @Summary Provide context
+// @Description Provide context for the model
+// @Tags context
+// @Accept json
+// @Produce json
+// @Param body body ContextRequestBody true "Request body"
+// @Success 200 {object} ContextResponseBody
+// @Failure 500 {object} ContextErrorResponseBody
+// @Router /context [post]
 func ProvideContext(c *gin.Context) {
 	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
 

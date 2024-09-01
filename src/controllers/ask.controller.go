@@ -16,6 +16,24 @@ type AskRequestBody struct {
 	Prompt string `json:"prompt"`
 }
 
+type AskResponseBody struct {
+	Response string `json:"response"`
+}
+
+type AskErrorResponseBody struct {
+	Error string `json:"error"`
+}
+
+// Ask godoc
+// @Summary Ask a question
+// @Description Ask a question and get a response
+// @Tags ask
+// @Accept json
+// @Produce json
+// @Param body body AskRequestBody true "Request body"
+// @Success 200 {object} AskResponseBody
+// @Failure 500 {object} AskErrorResponseBody
+// @Router /ask [post]
 func Ask(c *gin.Context) {
 	// extract variables from response body
 	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
@@ -45,14 +63,14 @@ func Ask(c *gin.Context) {
 	}
 
 	client := &http.Client{
-        Timeout: time.Minute * 5,
-    }
+		Timeout: time.Minute * 5,
+	}
 
 	LLAMA_API := os.Getenv("LLAMA_API")
 
 	// hit the api
-	req, err := http.NewRequest("POST", LLAMA_API + "api/generate", bytes.NewBuffer(promptJSON))
-	if(err != nil){
+	req, err := http.NewRequest("POST", LLAMA_API+"api/generate", bytes.NewBuffer(promptJSON))
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

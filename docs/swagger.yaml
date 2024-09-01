@@ -1,0 +1,93 @@
+definitions:
+  controllers.AskErrorResponseBody:
+    properties:
+      error:
+        type: string
+    type: object
+  controllers.AskRequestBody:
+    properties:
+      prompt:
+        type: string
+    type: object
+  controllers.AskResponseBody:
+    properties:
+      response:
+        type: string
+    type: object
+  controllers.ContextErrorResponseBody:
+    properties:
+      error:
+        type: string
+    type: object
+  controllers.ContextRequestBody:
+    properties:
+      contextExtension:
+        type: string
+      contextProvider:
+        type: string
+      domainOfProvider:
+        type: string
+      isLink:
+        type: boolean
+    type: object
+  controllers.ContextResponseBody:
+    properties:
+      response:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /ask:
+    post:
+      consumes:
+      - application/json
+      description: Ask a question and get a response
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AskRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.AskResponseBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.AskErrorResponseBody'
+      summary: Ask a question
+      tags:
+      - ask
+  /context:
+    post:
+      consumes:
+      - application/json
+      description: Provide context for the model
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ContextRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ContextResponseBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ContextErrorResponseBody'
+      summary: Provide context
+      tags:
+      - context
+swagger: "2.0"
