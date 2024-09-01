@@ -1,21 +1,25 @@
 package utils
 
 import (
-	"fmt"
+	"os"
 
 	"code.sajari.com/docconv"
 )
 
 func ExtractTextFromDocx(filePath string) (string, error) {
-	doc, err := docconv.ConvertPath(filePath)
+	f, err := os.Open(filePath)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	r := f
+	r = f
+
+	tmpl, _, err := docconv.ConvertDocx(r)
 	if err != nil {
 		return "", err
 	}
 
-	var text string
-	for _, page := range doc.Body {
-		text += fmt.Sprintf("%s\n", string(page))
-	}
-
-	return text, nil
+	return tmpl, nil
 }
