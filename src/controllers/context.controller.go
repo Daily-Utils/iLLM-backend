@@ -11,8 +11,9 @@ import (
 )
 
 type ContextRequestBody struct {
-	ContextProvided string `json:"contextProvider"`
-	IsLink          bool   `json:"isLink"`
+	ContextProvided  string `json:"contextProvider"`
+	ContextExtension string `json:"contextExtension"`
+	IsLink           bool   `json:"isLink"`
 	DomainOfProvider string `json:"domainOfProvider"`
 }
 
@@ -40,9 +41,36 @@ func ProvideContext(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"response": linkContext})
 	}
 
-	fileContext, err := utils.ExtractTextFromPDF(requestBody.ContextProvided)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	var fileContext string
+
+	if requestBody.ContextExtension == "pdf" {
+		fileContext, err := utils.ExtractTextFromPDF(requestBody.ContextProvided)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"response": fileContext})
+	} else if requestBody.ContextExtension == "txt" {
+		fileContext, err := utils.GetTextFromFile(requestBody.ContextProvided)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"response": fileContext})
+	} else if requestBody.ContextExtension == "text" {
+		c.JSON(http.StatusOK, gin.H{"response": requestBody.ContextProvided})
+	} else if requestBody.ContextExtension == "docx" {
+		fileContext, err := utils.ExtractTextFromDocx(requestBody.ContextProvided)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"response": fileContext})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid context extension"})
 		return
 	}
 
