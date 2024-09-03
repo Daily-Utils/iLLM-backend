@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	// "github.com/daily-utils/iLLM-backend/src/models"
+	"github.com/daily-utils/iLLM-backend/src/models"
 	"github.com/daily-utils/iLLM-backend/src/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -60,6 +61,8 @@ func ProvideContext(c *gin.Context) {
 	}
 
 	var fileContext string
+	var prompt string
+	var body string
 
 	if requestBody.ContextExtension == "pdf" {
 		fileContext, err := utils.ExtractTextFromPDF(requestBody.ContextProvided)
@@ -68,7 +71,22 @@ func ProvideContext(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"response": fileContext})
+		prompt = "I, personally, think that the following text is very interesting. It is like array contains text. Every element in array is text for that page respectively. Please keep it in your context will ask you questions on this context: " + fileContext
+
+		promptModel := models.Ask{
+			Model:  "llama3-gradient",
+			Prompt: prompt,
+			Stream: false,
+		}
+
+		bodyContent, err := utils.RequestClient(promptModel)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		body = bodyContent
 	} else if requestBody.ContextExtension == "txt" {
 		fileContext, err := utils.GetTextFromFile(requestBody.ContextProvided)
 		if err != nil {
@@ -76,21 +94,70 @@ func ProvideContext(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"response": fileContext})
+		prompt = "I, personally, think that the following text is very interesting. It is text extracted from a txt. Please keep it in your context will ask you questions on this context: " + fileContext
+
+		promptModel := models.Ask{
+			Model:  "llama3-gradient",
+			Prompt: prompt,
+			Stream: false,
+		}
+
+		bodyContent, err := utils.RequestClient(promptModel)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		body = bodyContent
 	} else if requestBody.ContextExtension == "text" {
-		c.JSON(http.StatusOK, gin.H{"response": requestBody.ContextProvided})
+		fileContext = requestBody.ContextProvided
+		prompt = "I, personally, think that the following text is very interesting. Please keep it in your context in a summrized manner will ask you questions on this context. \n\n The Text Context is as follows:" + fileContext
+
+		println("prompt: ", prompt)
+
+		promptModel := models.Ask{
+			Model:  "llama3-gradient",
+			Prompt: prompt,
+			Stream: false,
+		}
+
+		bodyContent, err := utils.RequestClient(promptModel)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		body = bodyContent
 	} else if requestBody.ContextExtension == "docx" {
+
 		fileContext, err := utils.ExtractTextFromDocx(requestBody.ContextProvided)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"response": fileContext})
+		prompt = "I, personally, think that the following text is very interesting. Please keep it in your context will ask you questions on this context: " + fileContext
+
+		promptModel := models.Ask{
+			Model:  "llama3-gradient",
+			Prompt: prompt,
+			Stream: false,
+		}
+
+		bodyContent, err := utils.RequestClient(promptModel)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		body = bodyContent
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid context extension"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": fileContext})
+	c.JSON(http.StatusOK, gin.H{"response": string(body)})
 }

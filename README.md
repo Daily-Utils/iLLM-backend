@@ -2,6 +2,8 @@
 
 Entire iLLM backend
 
-## Impliment swagger using
+## API Docs
 
-https://github.com/swaggo/gin-swagger
+```sh
+http:localhost:8090/swagger/index.html
+```

@@ -27,7 +27,6 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func Run() {
-	utils.LoadEnv()
 
 	route := gin.Default()
 	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
