@@ -1,6 +1,10 @@
-# iLLM-backend
+# iLLM-backend: Speak to LLM with Context
 
 Entire iLLM backend
+
+## Supported
+
+Context Extraction from **docx**. **pdf**, **text** file & **plain text** is supported
 
 ## Demo
 
