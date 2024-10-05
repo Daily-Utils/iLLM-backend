@@ -6,10 +6,21 @@ Entire iLLM backend
 
 Run ollama as a single container
 
-```
+```shell
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 ```
 
+Install air using golang
 
+```shell
+go install github.com/air-verse/air@latest
+```
+
+Run server on local
+
+```shell
+air
+```
 
 ## Supported
 
