@@ -108,6 +108,9 @@ const docTemplate = `{
         "controllers.AskRequestBody": {
             "type": "object",
             "properties": {
+                "model": {
+                    "type": "string"
+                },
                 "prompt": {
                     "type": "string"
                 }
@@ -143,6 +146,9 @@ const docTemplate = `{
                 },
                 "isLink": {
                     "type": "boolean"
+                },
+                "model": {
+                    "type": "string"
                 }
             }
         },

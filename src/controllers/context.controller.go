@@ -16,6 +16,7 @@ type ContextRequestBody struct {
 	ContextExtension string `json:"contextExtension"`
 	IsLink           bool   `json:"isLink"`
 	DomainOfProvider string `json:"domainOfProvider"`
+	Model string `json:"model"`
 }
 
 type ContextResponseBody struct {
@@ -74,7 +75,7 @@ func ProvideContext(c *gin.Context) {
 		prompt = "I, personally, think that the following text is very interesting. It is like array contains text. Every element in array is text for that page respectively. Please keep it in your context will ask you questions on this context: " + fileContext
 
 		promptModel := models.Ask{
-			Model:  "llama3-gradient",
+			Model:  requestBody.Model,
 			Prompt: prompt,
 			Stream: false,
 		}
@@ -97,7 +98,7 @@ func ProvideContext(c *gin.Context) {
 		prompt = "I, personally, think that the following text is very interesting. It is text extracted from a txt. Please keep it in your context will ask you questions on this context: " + fileContext
 
 		promptModel := models.Ask{
-			Model:  "llama3-gradient",
+			Model:  requestBody.Model,
 			Prompt: prompt,
 			Stream: false,
 		}
@@ -112,12 +113,12 @@ func ProvideContext(c *gin.Context) {
 		body = bodyContent
 	} else if requestBody.ContextExtension == "text" {
 		fileContext = requestBody.ContextProvided
-		prompt = "I, personally, think that the following text is very interesting. Please keep it in your context in a summrized manner will ask you questions on this context. \n\n The Text Context is as follows:" + fileContext
+		prompt = "This is the text I want you to remember:" + fileContext
 
 		println("prompt: ", prompt)
 
 		promptModel := models.Ask{
-			Model:  "llama3-gradient",
+			Model:  requestBody.Model,
 			Prompt: prompt,
 			Stream: false,
 		}
@@ -141,7 +142,7 @@ func ProvideContext(c *gin.Context) {
 		prompt = "I, personally, think that the following text is very interesting. Please keep it in your context will ask you questions on this context: " + fileContext
 
 		promptModel := models.Ask{
-			Model:  "llama3-gradient",
+			Model:  requestBody.Model,
 			Prompt: prompt,
 			Stream: false,
 		}

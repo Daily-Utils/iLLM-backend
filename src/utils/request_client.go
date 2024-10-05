@@ -29,6 +29,7 @@ func RequestClient(promptModel models.Ask) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("%w", err)
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := client.Do(req)
