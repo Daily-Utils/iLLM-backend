@@ -113,7 +113,7 @@ func ProvideContext(c *gin.Context) {
 		body = bodyContent
 	} else if requestBody.ContextExtension == "text" {
 		fileContext = requestBody.ContextProvided
-		prompt = "I, personally, think that the following text is very interesting. Please keep it in your context in a summrized manner will ask you questions on this context. \n\n The Text Context is as follows:" + fileContext
+		prompt = "This is the text I want you to remember:" + fileContext
 
 		println("prompt: ", prompt)
 

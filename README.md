@@ -22,6 +22,13 @@ Run server on local
 air
 ```
 
+If you don't want to use air
+
+```shell
+go mod download # Download the dependences
+go run main.go #  run the server
+```
+
 ## Supported
 
 Context Extraction from **docx**. **pdf**, **text** file & **plain text** is supported
