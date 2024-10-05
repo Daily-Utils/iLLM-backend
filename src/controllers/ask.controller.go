@@ -48,7 +48,7 @@ func Ask(c *gin.Context) {
 
 	// Extract prompt from body
 	prompt := models.Ask{
-		Model:  "llama3-gradient",
+		Model:  "llama3.2",
 		Prompt: string(requestBody.Prompt),
 		Stream: false,
 	}
