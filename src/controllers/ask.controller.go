@@ -12,6 +12,7 @@ import (
 
 type AskRequestBody struct {
 	Prompt string `json:"prompt"`
+	Model string `json:"model"`
 }
 
 type AskResponseBody struct {
@@ -48,7 +49,7 @@ func Ask(c *gin.Context) {
 
 	// Extract prompt from body
 	prompt := models.Ask{
-		Model:  "llama3.2",
+		Model:  requestBody.Model,
 		Prompt: string(requestBody.Prompt),
 		Stream: false,
 	}

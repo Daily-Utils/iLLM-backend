@@ -97,6 +97,9 @@
         "controllers.AskRequestBody": {
             "type": "object",
             "properties": {
+                "model": {
+                    "type": "string"
+                },
                 "prompt": {
                     "type": "string"
                 }
@@ -132,6 +135,9 @@
                 },
                 "isLink": {
                     "type": "boolean"
+                },
+                "model": {
+                    "type": "string"
                 }
             }
         },

@@ -2,6 +2,15 @@
 
 Entire iLLM backend
 
+## Local Development Support
+
+Run ollama as a single container
+
+```
+```
+
+
+
 ## Supported
 
 Context Extraction from **docx**. **pdf**, **text** file & **plain text** is supported

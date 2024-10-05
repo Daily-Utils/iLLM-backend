@@ -6,6 +6,8 @@ definitions:
     type: object
   controllers.AskRequestBody:
     properties:
+      model:
+        type: string
       prompt:
         type: string
     type: object
@@ -29,6 +31,8 @@ definitions:
         type: string
       isLink:
         type: boolean
+      model:
+        type: string
     type: object
   controllers.ContextResponseBody:
     properties:
