@@ -17,7 +17,7 @@ services:
       - illm
 
   go-server:
-    image: siddh34/illm-golang:latest
+    image: siddh34/illm-golang:0.0.1
     environment:
       LLAMA_URL: ${LLAMA_URL}
     ports:
