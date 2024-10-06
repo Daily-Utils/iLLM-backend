@@ -51,6 +51,6 @@ Context API: provide context via pdf, docx, txt & plain text
 
 ## API Docs
 
-```sh
+```md
 http:localhost:8090/swagger/index.html
 ```
