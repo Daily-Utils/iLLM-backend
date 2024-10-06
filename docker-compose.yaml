@@ -17,9 +17,9 @@ services:
       - illm
 
   go-server:
-    build:
-      context: .
-      dockerfile: dockerfile.goserver
+    image: siddh34/illm-golang:latest
+    environment:
+      LLAMA_URL: ${LLAMA_URL}
     ports:
       - "8081:8090"
     networks:

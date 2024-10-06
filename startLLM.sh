@@ -1,4 +1,4 @@
-docker exec -it illm-backend-ollama-1 bash
+docker exec -it ollama bash
 
 # ollama run llama3-gradient
 
