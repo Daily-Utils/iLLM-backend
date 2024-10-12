@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	// "github.com/daily-utils/iLLM-backend/src/models"
@@ -38,7 +38,7 @@ type ContextErrorResponseBody struct {
 // @Failure 500 {object} ContextErrorResponseBody
 // @Router /context [post]
 func ProvideContext(c *gin.Context) {
-	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
+	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
@@ -160,5 +160,13 @@ func ProvideContext(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": string(body)})
+	var response models.Response
+	if err := json.Unmarshal([]byte(body), &response); 
+
+	err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }

@@ -61,5 +61,13 @@ func Ask(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": string(body)})
+	var response models.Response
+	if err := json.Unmarshal([]byte(body), &response); 
+	
+	err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }
