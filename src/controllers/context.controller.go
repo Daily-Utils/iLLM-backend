@@ -51,14 +51,16 @@ func ProvideContext(c *gin.Context) {
 		return
 	}
 
-	// check for kind of context
+	var linkContext string
 	if requestBody.IsLink {
-		linkContext, err := utils.GetTextFromLink(requestBody.ContextProvided, requestBody.DomainOfProvider)
+		linkContextText, err := utils.GetTextFromLink(requestBody.ContextProvided, requestBody.DomainOfProvider)
+
+		linkContext = linkContextText
+
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"response": linkContext})
 	}
 
 	var fileContext string
@@ -143,6 +145,23 @@ func ProvideContext(c *gin.Context) {
 
 		promptModel := models.Ask{
 			Model:  requestBody.Model,
+			Prompt: prompt,
+			Stream: false,
+		}
+
+		bodyContent, err := utils.RequestClient(promptModel)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		body = bodyContent
+	} else if(requestBody.IsLink) {
+		prompt = "This is web extracted text via a scraper: " + linkContext
+
+		promptModel := models.Ask{
+			Model: requestBody.Model,
 			Prompt: prompt,
 			Stream: false,
 		}
