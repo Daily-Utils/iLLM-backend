@@ -7,5 +7,6 @@ import (
 
 func main() {
 	utils.LoadEnv()
-	src.Run()
+	ctx := utils.GetContext()
+	src.Run(ctx)
 }

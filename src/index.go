@@ -2,6 +2,7 @@ package src
 
 import (
 	"time"
+	"context"
 
 	"github.com/daily-utils/iLLM-backend/src/controllers"
 	"github.com/daily-utils/iLLM-backend/src/utils"
@@ -26,7 +27,14 @@ import (
 
 // @host localhost:8080
 // @BasePath /api/v1
-func Run() {
+func Run(ctx context.Context) {
+	client, err := utils.ConnectMongoDB()
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer client.Disconnect(utils.GetContext())
 
 	route := gin.Default()
 	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
@@ -51,7 +59,7 @@ func Run() {
 
 	route.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Server is runningg!!!",
+			"message": "Server is running!",
 		})
 	})
 
