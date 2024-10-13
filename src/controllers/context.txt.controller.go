@@ -10,54 +10,50 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ContextRequestBodyForDocx struct {
+type ContextRequestBodyForText struct {
 	ContextProvided string `json:"contextProvider"`
 	Model           string `json:"model"`
 }
 
-type ContextResponseBodyForDocx struct {
+type ContextRequestBodyForTextFile struct {
 	Response string `json:"response"`
 }
 
-type ContextErrorResponseBodyForDocx struct {
+type ContextRequestBodyForTextFileErr struct {
 	Error string `json:"error"`
 }
 
-// ProvideContextForDocx godoc
-// @Summary Provide context for docx
-// @Description Provide context for the model for docx
+// ProvideContextForText godoc
+// @Summary Provide context for text
+// @Description Provide context for the model for text
 // @Tags context
 // @Accept json
 // @Produce json
-// @Param body body ContextRequestBodyForDocx true "Request body"
-// @Success 200 {object} ContextResponseBodyForDocx
-// @Failure 500 {object} ContextErrorResponseBodyForDocx
-// @Router /context/docx [post]
-func ProvideContextForDocx(c *gin.Context) {
+// @Param body body ContextRequestBodyForText true "Request body"
+// @Success 200 {object} ContextRequestBodyForTextFile
+// @Failure 500 {object} ContextRequestBodyForTextFileErr
+// @Router /context/txtfile [post]
+func ProvideContextForText(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	var requestBody ContextRequestBodyForDocx
+	var requestBody ContextRequestBodyForText
 	if err := json.Unmarshal(bodyBytes, &requestBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
 		return
 	}
 
-	var fileContext string
-	var prompt string
-	var body string
-
-	fileContext, err = utils.ExtractTextFromDocx(requestBody.ContextProvided)
+	fileContext, err := utils.GetTextFromFile(requestBody.ContextProvided)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	prompt = "I, personally, think that the following text is very interesting. Please keep it in your context will ask you questions on this context: " + fileContext
+	prompt := "I, personally, think that the following text is very interesting. It is text extracted from a txt. Please keep it in your context will ask you questions on this context: " + fileContext
 
 	promptModel := models.Ask{
 		Model:  requestBody.Model,
@@ -72,8 +68,7 @@ func ProvideContextForDocx(c *gin.Context) {
 		return
 	}
 
-	body = bodyContent
-
+	body := bodyContent
 	var response models.Response
 
 	if err := json.Unmarshal([]byte(body), &response); err != nil {

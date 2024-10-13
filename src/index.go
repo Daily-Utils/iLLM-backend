@@ -64,8 +64,14 @@ func Run(ctx context.Context) {
 	})
 
 	// add routers
-	route.POST("/ask", controllers.Ask)
-	route.POST("/context", controllers.ProvideContext)
 
+	// ask routes
+	route.POST("/ask", controllers.Ask)
+
+	// context routes
+	route.POST("/context/docx", controllers.ProvideContextForDocx)
+	route.POST("/context/link", controllers.ProvideContextForLink)
+	route.POST("/context/plainText", controllers.ProvideContextForPlainText)
+	route.POST("/context/txtfile", controllers.ProvideContextForText)
 	route.Run(":8090")
 }
