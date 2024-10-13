@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	// "github.com/daily-utils/iLLM-backend/src/models"
@@ -38,7 +38,7 @@ type ContextErrorResponseBody struct {
 // @Failure 500 {object} ContextErrorResponseBody
 // @Router /context [post]
 func ProvideContext(c *gin.Context) {
-	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
+	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
@@ -51,14 +51,16 @@ func ProvideContext(c *gin.Context) {
 		return
 	}
 
-	// check for kind of context
+	var linkContext string
 	if requestBody.IsLink {
-		linkContext, err := utils.GetTextFromLink(requestBody.ContextProvided, requestBody.DomainOfProvider)
+		linkContextText, err := utils.GetTextFromLink(requestBody.ContextProvided, requestBody.DomainOfProvider)
+
+		linkContext = linkContextText
+
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"response": linkContext})
 	}
 
 	var fileContext string
@@ -155,10 +157,35 @@ func ProvideContext(c *gin.Context) {
 		}
 
 		body = bodyContent
+	} else if(requestBody.IsLink) {
+		prompt = "This is web extracted text via a scraper: " + linkContext
+
+		promptModel := models.Ask{
+			Model: requestBody.Model,
+			Prompt: prompt,
+			Stream: false,
+		}
+
+		bodyContent, err := utils.RequestClient(promptModel)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		body = bodyContent
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid context extension"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": string(body)})
+	var response models.Response
+	if err := json.Unmarshal([]byte(body), &response); 
+
+	err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }

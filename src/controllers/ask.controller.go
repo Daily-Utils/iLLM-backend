@@ -13,6 +13,7 @@ import (
 type AskRequestBody struct {
 	Prompt string `json:"prompt"`
 	Model string `json:"model"`
+	Context []int64 `json:"context"`
 }
 
 type AskResponseBody struct {
@@ -52,6 +53,7 @@ func Ask(c *gin.Context) {
 		Model:  requestBody.Model,
 		Prompt: string(requestBody.Prompt),
 		Stream: false,
+		Context: requestBody.Context,
 	}
 
 	body, err := utils.RequestClient(prompt)
@@ -61,5 +63,13 @@ func Ask(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": string(body)})
+	var response models.Response
+	if err := json.Unmarshal([]byte(body), &response); 
+	
+	err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }
