@@ -13,3 +13,7 @@ type Response struct {
 	Eval_Duration        int64   `json:"eval_duration"`
 	Context              []int64 `json:"context"`
 }
+
+type ResponseError struct {
+	Error string `json:"error"`
+}

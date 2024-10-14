@@ -15,14 +15,6 @@ type ContextRequestBodyForPlainText struct {
 	Model string `json:"model"`
 }
 
-type ContextResponseBodyForPlainText struct {
-	Response string `json:"response"`
-}
-
-type ContextErrorResponseBodyForPlainText struct {
-	Error string `json:"error"`
-}
-
 // ProvideContextForPlainText godoc
 // @Summary Provide context for plain text
 // @Description Provide context for the model for plain text
@@ -30,8 +22,8 @@ type ContextErrorResponseBodyForPlainText struct {
 // @Accept json
 // @Produce json
 // @Param body body ContextRequestBodyForPlainText true "Request body"
-// @Success 200 {object} ContextResponseBodyForPlainText
-// @Failure 500 {object} ContextErrorResponseBodyForPlainText
+// @Success 200 {object} models.Response
+// @Failure 500 {object} models.ResponseError
 // @Router /context/plaintext [post]
 func ProvideContextForPlainText(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
@@ -71,5 +63,5 @@ func ProvideContextForPlainText(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": response.Response})
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }

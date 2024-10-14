@@ -16,14 +16,6 @@ type AskRequestBody struct {
 	Context []int64 `json:"context"`
 }
 
-type AskResponseBody struct {
-	Response string `json:"response"`
-}
-
-type AskErrorResponseBody struct {
-	Error string `json:"error"`
-}
-
 // Ask godoc
 // @Summary Ask a question
 // @Description Ask a question and get a response
@@ -31,8 +23,8 @@ type AskErrorResponseBody struct {
 // @Accept json
 // @Produce json
 // @Param body body AskRequestBody true "Request body"
-// @Success 200 {object} AskResponseBody
-// @Failure 500 {object} AskErrorResponseBody
+// @Success 200 {object} models.Response
+// @Failure 500 {object} models.ResponseError
 // @Router /ask [post]
 func Ask(c *gin.Context) {
 	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
@@ -65,7 +57,7 @@ func Ask(c *gin.Context) {
 
 	var response models.Response
 	if err := json.Unmarshal([]byte(body), &response); 
-	
+
 	err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -30,8 +30,8 @@ type ContextErrorResponseBodyForDocx struct {
 // @Accept json
 // @Produce json
 // @Param body body ContextRequestBodyForDocx true "Request body"
-// @Success 200 {object} ContextResponseBodyForDocx
-// @Failure 500 {object} ContextErrorResponseBodyForDocx
+// @Success 200 {object} models.Response
+// @Failure 500 {object} models.ResponseError
 // @Router /context/docx [post]
 func ProvideContextForDocx(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
@@ -81,5 +81,5 @@ func ProvideContextForDocx(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": response.Response})
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }

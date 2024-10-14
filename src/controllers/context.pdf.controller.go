@@ -10,15 +10,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
+
 // ProvideContextForPdf godoc
 // @Summary Provide context for PDF
 // @Description Provide context for the model for PDF
 // @Tags context
 // @Accept json
 // @Produce json
-// @Param body body RequestBodyForPDF true "Request body"
-// @Success 200 {object} ResponseBodyForPDF
-// @Failure 500 {object} ErrorResponseBodyForPDF
+// @Param body body models.RequestBodyForPDF true "Request body"
+// @Success 200 {object} models.Response
+// @Failure 500 {object} models.ResponseError
 // @Router /context/pdf [post]
 func ProvideContextForPdf(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
@@ -58,5 +60,5 @@ func ProvideContextForPdf(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": response.Response})
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }

@@ -1,16 +1,20 @@
 package src
 
 import (
-	"time"
 	"context"
+	"log"
+	"os"
+	"time"
 
+	_ "github.com/daily-utils/iLLM-backend/docs"
 	"github.com/daily-utils/iLLM-backend/src/controllers"
 	"github.com/daily-utils/iLLM-backend/src/utils"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	_ "github.com/daily-utils/iLLM-backend/docs"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // @title iLLM Backend API
@@ -28,13 +32,18 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func Run(ctx context.Context) {
-	client, err := utils.ConnectMongoDB()
+	mongoURL := os.Getenv("MONGO_URL")
+	clientOptions := options.Client().ApplyURI(mongoURL)
 
-	if err != nil {
-		panic(err)
-	}
+    client, err := mongo.Connect(ctx, clientOptions)
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	defer client.Disconnect(utils.GetContext())
+    err = client.Ping(ctx, nil)
+    if err != nil {
+        log.Fatal(err)
+    }
 
 	route := gin.Default()
 	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
@@ -71,7 +80,7 @@ func Run(ctx context.Context) {
 	// context routes
 	route.POST("/context/docx", controllers.ProvideContextForDocx)
 	route.POST("/context/link", controllers.ProvideContextForLink)
-	route.POST("/context/plainText", controllers.ProvideContextForPlainText)
+	route.POST("/context/plaintext", controllers.ProvideContextForPlainText)
 	route.POST("/context/txtfile", controllers.ProvideContextForText)
 	route.Run(":8090")
 }

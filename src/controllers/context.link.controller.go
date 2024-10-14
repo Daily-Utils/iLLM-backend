@@ -33,8 +33,8 @@ type ContextErrorResponseBodyForLink struct {
 // @Accept json
 // @Produce json
 // @Param body body ContextRequestBodyForLink true "Request body"
-// @Success 200 {object} ContextResponseBodyForLink
-// @Failure 500 {object} ContextErrorResponseBodyForLink
+// @Success 200 {object} models.Response
+// @Failure 500 {object} models.ResponseError
 // @Router /context/link [post]
 func ProvideContextForLink(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)

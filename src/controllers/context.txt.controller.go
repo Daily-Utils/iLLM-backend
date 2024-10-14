@@ -30,8 +30,8 @@ type ContextRequestBodyForTextFileErr struct {
 // @Accept json
 // @Produce json
 // @Param body body ContextRequestBodyForText true "Request body"
-// @Success 200 {object} ContextRequestBodyForTextFile
-// @Failure 500 {object} ContextRequestBodyForTextFileErr
+// @Success 200 {object} models.Response
+// @Failure 500 {object} models.ResponseError
 // @Router /context/txtfile [post]
 func ProvideContextForText(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
@@ -76,5 +76,5 @@ func ProvideContextForText(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": response.Response})
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }

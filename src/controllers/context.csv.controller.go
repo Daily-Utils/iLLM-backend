@@ -10,6 +10,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ProvideContextForCSV godoc
+// @Summary Provide context for CSV
+// @Description Provide context for the model for CSV
+// @Tags context
+// @Accept json
+// @Produce json
+// @Param body body models.RequestBodyForCSV true "Request body"
+// @Success 200 {object} models.Response
+// @Failure 500 {object} models.ResponseError
+// @Router /context/csv [post]
 func ProvideContextForCSV(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
 
