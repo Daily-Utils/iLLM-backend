@@ -82,5 +82,8 @@ func Run(ctx context.Context) {
 	route.POST("/context/link", controllers.ProvideContextForLink)
 	route.POST("/context/plaintext", controllers.ProvideContextForPlainText)
 	route.POST("/context/txtfile", controllers.ProvideContextForText)
+	route.POST("/context/csv", controllers.ProvideContextForCSV)
+	route.POST("/context/pdf", controllers.ProvideContextForPdf)
+
 	route.Run(":8090")
 }
