@@ -1,42 +1,96 @@
 definitions:
-  controllers.AskErrorResponseBody:
-    properties:
-      error:
-        type: string
-    type: object
   controllers.AskRequestBody:
     properties:
+      context:
+        items:
+          type: integer
+        type: array
       model:
         type: string
       prompt:
         type: string
     type: object
-  controllers.AskResponseBody:
+  controllers.ContextRequestBodyForDocx:
     properties:
-      response:
-        type: string
-    type: object
-  controllers.ContextErrorResponseBody:
-    properties:
-      error:
-        type: string
-    type: object
-  controllers.ContextRequestBody:
-    properties:
-      contextExtension:
-        type: string
       contextProvider:
         type: string
-      domainOfProvider:
-        type: string
-      isLink:
-        type: boolean
       model:
         type: string
     type: object
-  controllers.ContextResponseBody:
+  controllers.ContextRequestBodyForLink:
     properties:
+      Link:
+        type: string
+      contextExtension:
+        type: string
+      domainOfProvider:
+        type: string
+      model:
+        type: string
+    type: object
+  controllers.ContextRequestBodyForPlainText:
+    properties:
+      model:
+        type: string
+      text:
+        type: string
+    type: object
+  controllers.ContextRequestBodyForText:
+    properties:
+      contextProvider:
+        type: string
+      model:
+        type: string
+    type: object
+  models.BodyForPDF:
+    properties:
+      data:
+        type: string
+    type: object
+  models.RequestBodyForCSV:
+    properties:
+      body:
+        type: string
+      model:
+        type: string
+    type: object
+  models.RequestBodyForPDF:
+    properties:
+      body:
+        $ref: '#/definitions/models.BodyForPDF'
+      model:
+        type: string
+    type: object
+  models.Response:
+    properties:
+      context:
+        items:
+          type: integer
+        type: array
+      created_at:
+        type: string
+      done:
+        type: boolean
+      eval_count:
+        type: integer
+      eval_duration:
+        type: integer
+      load_duration:
+        type: integer
+      model:
+        type: string
+      prompt_eval_count:
+        type: integer
+      prompt_eval_duration:
+        type: integer
       response:
+        type: string
+      total_duration:
+        type: integer
+    type: object
+  models.ResponseError:
+    properties:
+      error:
         type: string
     type: object
 info:
@@ -60,38 +114,168 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.AskResponseBody'
+            $ref: '#/definitions/models.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.AskErrorResponseBody'
+            $ref: '#/definitions/models.ResponseError'
       summary: Ask a question
       tags:
       - ask
-  /context:
+  /context/csv:
     post:
       consumes:
       - application/json
-      description: Provide context for the model
+      description: Provide context for the model for CSV
       parameters:
       - description: Request body
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controllers.ContextRequestBody'
+          $ref: '#/definitions/models.RequestBodyForCSV'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.ContextResponseBody'
+            $ref: '#/definitions/models.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.ContextErrorResponseBody'
-      summary: Provide context
+            $ref: '#/definitions/models.ResponseError'
+      summary: Provide context for CSV
+      tags:
+      - context
+  /context/docx:
+    post:
+      consumes:
+      - application/json
+      description: Provide context for the model for docx
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ContextRequestBodyForDocx'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Provide context for docx
+      tags:
+      - context
+  /context/link:
+    post:
+      consumes:
+      - application/json
+      description: Provide context for the model for link
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ContextRequestBodyForLink'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Provide context for link
+      tags:
+      - context
+  /context/pdf:
+    post:
+      consumes:
+      - application/json
+      description: Provide context for the model for PDF
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.RequestBodyForPDF'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Provide context for PDF
+      tags:
+      - context
+  /context/plaintext:
+    post:
+      consumes:
+      - application/json
+      description: Provide context for the model for plain text
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ContextRequestBodyForPlainText'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Provide context for plain text
+      tags:
+      - context
+  /context/txtfile:
+    post:
+      consumes:
+      - application/json
+      description: Provide context for the model for text
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ContextRequestBodyForText'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Provide context for text
       tags:
       - context
 swagger: "2.0"

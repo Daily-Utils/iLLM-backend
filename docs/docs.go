@@ -43,21 +43,21 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.AskResponseBody"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.AskErrorResponseBody"
+                            "$ref": "#/definitions/models.ResponseError"
                         }
                     }
                 }
             }
         },
-        "/context": {
+        "/context/csv": {
             "post": {
-                "description": "Provide context for the model",
+                "description": "Provide context for the model for CSV",
                 "consumes": [
                     "application/json"
                 ],
@@ -67,7 +67,7 @@ const docTemplate = `{
                 "tags": [
                     "context"
                 ],
-                "summary": "Provide context",
+                "summary": "Provide context for CSV",
                 "parameters": [
                     {
                         "description": "Request body",
@@ -75,7 +75,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.ContextRequestBody"
+                            "$ref": "#/definitions/models.RequestBodyForCSV"
                         }
                     }
                 ],
@@ -83,13 +83,213 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ContextResponseBody"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ContextErrorResponseBody"
+                            "$ref": "#/definitions/models.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/context/docx": {
+            "post": {
+                "description": "Provide context for the model for docx",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "context"
+                ],
+                "summary": "Provide context for docx",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ContextRequestBodyForDocx"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/context/link": {
+            "post": {
+                "description": "Provide context for the model for link",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "context"
+                ],
+                "summary": "Provide context for link",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ContextRequestBodyForLink"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/context/pdf": {
+            "post": {
+                "description": "Provide context for the model for PDF",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "context"
+                ],
+                "summary": "Provide context for PDF",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.RequestBodyForPDF"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/context/plaintext": {
+            "post": {
+                "description": "Provide context for the model for plain text",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "context"
+                ],
+                "summary": "Provide context for plain text",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ContextRequestBodyForPlainText"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/context/txtfile": {
+            "post": {
+                "description": "Provide context for the model for text",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "context"
+                ],
+                "summary": "Provide context for text",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ContextRequestBodyForText"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseError"
                         }
                     }
                 }
@@ -97,17 +297,15 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.AskErrorResponseBody": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
         "controllers.AskRequestBody": {
             "type": "object",
             "properties": {
+                "context": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "model": {
                     "type": "string"
                 },
@@ -116,46 +314,131 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.AskResponseBody": {
+        "controllers.ContextRequestBodyForDocx": {
             "type": "object",
             "properties": {
-                "response": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.ContextErrorResponseBody": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.ContextRequestBody": {
-            "type": "object",
-            "properties": {
-                "contextExtension": {
-                    "type": "string"
-                },
                 "contextProvider": {
                     "type": "string"
-                },
-                "domainOfProvider": {
-                    "type": "string"
-                },
-                "isLink": {
-                    "type": "boolean"
                 },
                 "model": {
                     "type": "string"
                 }
             }
         },
-        "controllers.ContextResponseBody": {
+        "controllers.ContextRequestBodyForLink": {
             "type": "object",
             "properties": {
+                "Link": {
+                    "type": "string"
+                },
+                "contextExtension": {
+                    "type": "string"
+                },
+                "domainOfProvider": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.ContextRequestBodyForPlainText": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.ContextRequestBodyForText": {
+            "type": "object",
+            "properties": {
+                "contextProvider": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.BodyForPDF": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.RequestBodyForCSV": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.RequestBodyForPDF": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "$ref": "#/definitions/models.BodyForPDF"
+                },
+                "model": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Response": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "done": {
+                    "type": "boolean"
+                },
+                "eval_count": {
+                    "type": "integer"
+                },
+                "eval_duration": {
+                    "type": "integer"
+                },
+                "load_duration": {
+                    "type": "integer"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "prompt_eval_count": {
+                    "type": "integer"
+                },
+                "prompt_eval_duration": {
+                    "type": "integer"
+                },
                 "response": {
+                    "type": "string"
+                },
+                "total_duration": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ResponseError": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }
