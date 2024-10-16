@@ -54,7 +54,9 @@ func ProvideContextForCSV(c *gin.Context) {
 
 	var response models.Response
 
-	if err := json.Unmarshal([]byte(body), &response); err != nil {
+	if err := json.Unmarshal([]byte(body), &response); 
+
+	err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
