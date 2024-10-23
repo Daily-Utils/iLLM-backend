@@ -1,20 +1,21 @@
 package utils
 
 import (
-	"os"
+	"mime/multipart"
 
 	"code.sajari.com/docconv"
 )
 
-func ExtractTextFromDocx(filePath string) (string, error) {
-	f, err := os.Open(filePath)
+func ExtractTextFromDocx(fileHeader *multipart.FileHeader) (string, error) {
+	file, err := fileHeader.Open()
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	defer f.Close()
 
-	r := f
-	r = f
+	defer file.Close()
+
+	r := file
+	r = file
 
 	tmpl, _, err := docconv.ConvertDocx(r)
 	if err != nil {

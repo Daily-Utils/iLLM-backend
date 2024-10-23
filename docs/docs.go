@@ -99,7 +99,7 @@ const docTemplate = `{
             "post": {
                 "description": "Provide context for the model for docx",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -110,13 +110,16 @@ const docTemplate = `{
                 "summary": "Provide context for docx",
                 "parameters": [
                     {
-                        "description": "Request body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.ContextRequestBodyForDocx"
-                        }
+                        "type": "string",
+                        "name": "model",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "File to upload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -314,17 +317,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "prompt": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.ContextRequestBodyForDocx": {
-            "type": "object",
-            "properties": {
-                "contextProvider": {
-                    "type": "string"
-                },
-                "model": {
                     "type": "string"
                 }
             }

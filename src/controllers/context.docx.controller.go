@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"github.com/daily-utils/iLLM-backend/src/models"
 	"github.com/daily-utils/iLLM-backend/src/utils"
@@ -27,59 +28,68 @@ type ContextErrorResponseBodyForDocx struct {
 // @Summary Provide context for docx
 // @Description Provide context for the model for docx
 // @Tags context
-// @Accept json
+// @Accept multipart/form-data
 // @Produce json
-// @Param body body ContextRequestBodyForDocx true "Request body"
+// @Param body formData models.ContextRequestBodyForDocx true "Request body"
+// @Param file formData file true "File to upload"
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
 // @Router /context/docx [post]
 func ProvideContextForDocx(c *gin.Context) {
-	bodyBytes, err := io.ReadAll(c.Request.Body)
+	var requestBody models.ContextRequestBodyForDocx
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	if c.ContentType() == "multipart/form-data" {
+		file, err := c.FormFile("file")
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
+
+		ext := strings.ToLower(filepath.Ext(file.Filename))
+
+		allowedExtensions := map[string]bool{
+			".docx": true,
+		}
+
+		if !allowedExtensions[ext] {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file extension"})
+			return
+		}
+
+		requestBody.Model = c.PostForm("model")
+
+		fileContext, err := utils.ExtractTextFromDocx(file)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		prompt := "I, personally, think that the following text is very interesting. Please keep it in your context will ask you questions on this context: " + fileContext
+
+		promptModel := models.Ask{
+			Model:  requestBody.Model,
+			Prompt: prompt,
+			Stream: false,
+		}
+
+		bodyContent, err := utils.RequestClient(promptModel)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		body := bodyContent
+
+		var response models.Response
+
+		if err := json.Unmarshal([]byte(body), &response); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"response": response})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid content type"})
 	}
-
-	var requestBody ContextRequestBodyForDocx
-	if err := json.Unmarshal(bodyBytes, &requestBody); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
-		return
-	}
-
-	var fileContext string
-	var prompt string
-	var body string
-
-	fileContext, err = utils.ExtractTextFromDocx(requestBody.ContextProvided)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	prompt = "I, personally, think that the following text is very interesting. Please keep it in your context will ask you questions on this context: " + fileContext
-
-	promptModel := models.Ask{
-		Model:  requestBody.Model,
-		Prompt: prompt,
-		Stream: false,
-	}
-
-	bodyContent, err := utils.RequestClient(promptModel)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	body = bodyContent
-
-	var response models.Response
-
-	if err := json.Unmarshal([]byte(body), &response); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"response": response})
 }

@@ -10,13 +10,6 @@ definitions:
       prompt:
         type: string
     type: object
-  controllers.ContextRequestBodyForDocx:
-    properties:
-      contextProvider:
-        type: string
-      model:
-        type: string
-    type: object
   controllers.ContextRequestBodyForLink:
     properties:
       Link:
@@ -144,15 +137,17 @@ paths:
   /context/docx:
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Provide context for the model for docx
       parameters:
-      - description: Request body
-        in: body
-        name: body
+      - in: formData
+        name: model
+        type: string
+      - description: File to upload
+        in: formData
+        name: file
         required: true
-        schema:
-          $ref: '#/definitions/controllers.ContextRequestBodyForDocx'
+        type: file
       produces:
       - application/json
       responses:
