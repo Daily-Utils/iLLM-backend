@@ -14,7 +14,7 @@ import (
 type ContextRequestBodyForLink struct {
 	Link             string `json:"Link"`
 	ContextExtension string `json:"contextExtension"`
-	DomainOfProvider string `json:"domainOfProvider"`
+	DomainOfProvider []string `json:"domainOfProvider"`
 	Model            string `json:"model"`
 }
 

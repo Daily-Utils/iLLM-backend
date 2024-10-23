@@ -17,7 +17,9 @@ definitions:
       contextExtension:
         type: string
       domainOfProvider:
-        type: string
+        items:
+          type: string
+        type: array
       model:
         type: string
     type: object

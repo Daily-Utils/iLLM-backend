@@ -7,12 +7,12 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func GetTextFromLink(url string, domain string) (string, error) {
+func GetTextFromLink(url string, domain []string) (string, error) {
 	textArr := []string{}
 	text := ""
 
 	c := colly.NewCollector(
-		colly.AllowedDomains(domain),
+		colly.AllowedDomains(domain...),
 	)
 
 	c.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"

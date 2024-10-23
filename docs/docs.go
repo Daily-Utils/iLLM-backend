@@ -331,7 +331,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "domainOfProvider": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "model": {
                     "type": "string"
