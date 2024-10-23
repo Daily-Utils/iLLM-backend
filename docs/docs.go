@@ -99,7 +99,7 @@ const docTemplate = `{
             "post": {
                 "description": "Provide context for the model for docx",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -110,13 +110,16 @@ const docTemplate = `{
                 "summary": "Provide context for docx",
                 "parameters": [
                     {
-                        "description": "Request body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.ContextRequestBodyForDocx"
-                        }
+                        "type": "string",
+                        "name": "model",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "File to upload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -259,7 +262,8 @@ const docTemplate = `{
             "post": {
                 "description": "Provide context for the model for text",
                 "consumes": [
-                    "application/json"
+                    "application/json",
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -270,13 +274,16 @@ const docTemplate = `{
                 "summary": "Provide context for text",
                 "parameters": [
                     {
-                        "description": "Request body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.ContextRequestBodyForText"
-                        }
+                        "type": "string",
+                        "name": "model",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "File to upload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -314,17 +321,6 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.ContextRequestBodyForDocx": {
-            "type": "object",
-            "properties": {
-                "contextProvider": {
-                    "type": "string"
-                },
-                "model": {
-                    "type": "string"
-                }
-            }
-        },
         "controllers.ContextRequestBodyForLink": {
             "type": "object",
             "properties": {
@@ -335,7 +331,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "domainOfProvider": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "model": {
                     "type": "string"
@@ -349,17 +348,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "text": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.ContextRequestBodyForText": {
-            "type": "object",
-            "properties": {
-                "contextProvider": {
-                    "type": "string"
-                },
-                "model": {
                     "type": "string"
                 }
             }

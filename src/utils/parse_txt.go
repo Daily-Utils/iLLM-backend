@@ -2,11 +2,11 @@ package utils
 
 import (
 	"bufio"
-	"os"
+	"mime/multipart"
 )
 
-func GetTextFromFile(filePath string) (string, error) {
-	file, err := os.Open((filePath))
+func GetTextFromFile(fileHeader *multipart.FileHeader) (string, error) {
+	file, err := fileHeader.Open()
 	if err != nil {
 		return "", err
 	}

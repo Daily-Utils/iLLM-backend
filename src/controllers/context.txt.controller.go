@@ -2,52 +2,51 @@ package controllers
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"github.com/daily-utils/iLLM-backend/src/models"
 	"github.com/daily-utils/iLLM-backend/src/utils"
 	"github.com/gin-gonic/gin"
 )
 
-type ContextRequestBodyForText struct {
-	ContextProvided string `json:"contextProvider"`
-	Model           string `json:"model"`
-}
-
-type ContextRequestBodyForTextFile struct {
-	Response string `json:"response"`
-}
-
-type ContextRequestBodyForTextFileErr struct {
-	Error string `json:"error"`
-}
-
 // ProvideContextForText godoc
 // @Summary Provide context for text
 // @Description Provide context for the model for text
 // @Tags context
 // @Accept json
+// @Accept multipart/form-data
 // @Produce json
-// @Param body body ContextRequestBodyForText true "Request body"
+// @Param body formData models.ContextRequestBodyForText true "Request body"
+// @Param file formData file true "File to upload"
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
 // @Router /context/txtfile [post]
 func ProvideContextForText(c *gin.Context) {
-	bodyBytes, err := io.ReadAll(c.Request.Body)
+	var requestBody models.ContextRequestBodyForText
 
+	if c.ContentType() == "multipart/form-data" {
+		file, err := c.FormFile("file")
 	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	ext := strings.ToLower(filepath.Ext(file.Filename))
+
+	allowedExtensions := map[string]bool{
+		".txt":  true,
+		".text": true,
+	}
+
+	if !allowedExtensions[ext] {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file extension"})
 		return
 	}
 
-	var requestBody ContextRequestBodyForText
-	if err := json.Unmarshal(bodyBytes, &requestBody); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
-		return
-	}
+	requestBody.Model = c.PostForm("model")
 
-	fileContext, err := utils.GetTextFromFile(requestBody.ContextProvided)
+	fileContext, err := utils.GetTextFromFile(file)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -77,4 +76,7 @@ func ProvideContextForText(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"response": response})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid content type"})
+	}
 }
