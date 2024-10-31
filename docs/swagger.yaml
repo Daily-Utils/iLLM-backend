@@ -84,32 +84,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /ask:
-    post:
-      consumes:
-      - application/json
-      description: Ask a question and get a response
-      parameters:
-      - description: Request body
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/controllers.AskRequestBody'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.ResponseError'
-      summary: Ask a question
-      tags:
-      - ask
   /context/csv:
     post:
       consumes:
@@ -271,4 +245,30 @@ paths:
       summary: Provide context for text
       tags:
       - context
+  /temp/ask:
+    post:
+      consumes:
+      - application/json
+      description: Ask a question and get a response
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AskRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Ask a question
+      tags:
+      - ask
 swagger: "2.0"
