@@ -3,7 +3,6 @@ package src
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
 	_ "github.com/daily-utils/iLLM-backend/docs"
@@ -13,8 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // @title iLLM Backend API
@@ -32,20 +29,13 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func Run(ctx context.Context) {
-	mongoURL := os.Getenv("MONGO_URL")
-	clientOptions := options.Client().ApplyURI(mongoURL)
+	client, err := utils.ConnectMongoDB(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(ctx)
 
-    client, err := mongo.Connect(ctx, clientOptions)
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    err = client.Ping(ctx, nil)
-    if err != nil {
-        log.Fatal(err)
-    }
-
-	route := gin.Default()
+	route := gin.New()
 	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
 	route.Use(utils.Logger())
 
@@ -75,7 +65,7 @@ func Run(ctx context.Context) {
 	// add routers
 
 	// ask routes
-	route.POST("/ask", controllers.Ask)
+	route.POST("/temp/ask", controllers.TempAsk)
 
 	// context routes
 	route.POST("/context/docx", controllers.ProvideContextForDocx)

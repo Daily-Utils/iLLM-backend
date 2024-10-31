@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/daily-utils/iLLM-backend/src/models"
@@ -25,9 +25,9 @@ type AskRequestBody struct {
 // @Param body body AskRequestBody true "Request body"
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
-// @Router /ask [post]
-func Ask(c *gin.Context) {
-	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
+// @Router /temp/ask [post]
+func TempAsk(c *gin.Context) {
+	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})

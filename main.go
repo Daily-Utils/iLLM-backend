@@ -8,7 +8,7 @@ import (
 func main() {
 	utils.LoadEnv()
     ctx, cancel := utils.GetContext()
-    defer cancel() // Ensure the context is canceled to free resources
+    defer cancel()
 
     src.Run(ctx)
 }
