@@ -18,14 +18,11 @@ import (
 // @version 1.0
 // @description This is a sample server for iLLM backend.
 // @termsOfService http://swagger.io/terms/
-
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
 // @contact.email support@swagger.io
-
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
 // @host localhost:8080
 // @BasePath /api/v1
 func Run(ctx context.Context) {
@@ -34,6 +31,10 @@ func Run(ctx context.Context) {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
+
+	ctrl := &controllers.Controller{
+		MongoClient: client,
+	}
 
 	route := gin.New()
 	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
@@ -65,15 +66,15 @@ func Run(ctx context.Context) {
 	// add routers
 
 	// ask routes
-	route.POST("/temp/ask", controllers.TempAsk)
+	route.POST("/temp/ask", ctrl.TempAsk)
 
 	// context routes
-	route.POST("/context/docx", controllers.ProvideContextForDocx)
-	route.POST("/context/link", controllers.ProvideContextForLink)
-	route.POST("/context/plaintext", controllers.ProvideContextForPlainText)
-	route.POST("/context/txtfile", controllers.ProvideContextForText)
-	route.POST("/context/csv", controllers.ProvideContextForCSV)
-	route.POST("/context/pdf", controllers.ProvideContextForPdf)
+	route.POST("/context/docx", ctrl.ProvideContextForDocx)
+	route.POST("/context/link", ctrl.ProvideContextForLink)
+	route.POST("/context/plaintext", ctrl.ProvideContextForPlainText)
+	route.POST("/context/txtfile", ctrl.ProvideContextForText)
+	route.POST("/context/csv", ctrl.ProvideContextForCSV)
+	route.POST("/context/pdf", ctrl.ProvideContextForPdf)
 
 	route.Run(":8090")
 }

@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
 // @Router /context/csv [post]
-func ProvideContextForCSV(c *gin.Context) {
+func (ctrl *Controller) ProvideContextForCSV(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
@@ -29,9 +29,7 @@ func ProvideContextForCSV(c *gin.Context) {
 	}
 
 	var requestBody models.RequestBodyForCSV
-	if err := json.Unmarshal(bodyBytes, &requestBody);
-
-	err != nil {
+	if err := json.Unmarshal(bodyBytes, &requestBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
 	}
 
@@ -54,9 +52,7 @@ func ProvideContextForCSV(c *gin.Context) {
 
 	var response models.Response
 
-	if err := json.Unmarshal([]byte(body), &response); 
-
-	err != nil {
+	if err := json.Unmarshal([]byte(body), &response); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

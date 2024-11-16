@@ -11,8 +11,8 @@ import (
 )
 
 type AskRequestBody struct {
-	Prompt string `json:"prompt"`
-	Model string `json:"model"`
+	Prompt  string  `json:"prompt"`
+	Model   string  `json:"model"`
 	Context []int64 `json:"context"`
 }
 
@@ -26,7 +26,7 @@ type AskRequestBody struct {
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
 // @Router /temp/ask [post]
-func TempAsk(c *gin.Context) {
+func (ctrl *Controller) TempAsk(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
@@ -42,9 +42,9 @@ func TempAsk(c *gin.Context) {
 
 	// Extract prompt from body
 	prompt := models.Ask{
-		Model:  requestBody.Model,
-		Prompt: string(requestBody.Prompt),
-		Stream: false,
+		Model:   requestBody.Model,
+		Prompt:  string(requestBody.Prompt),
+		Stream:  false,
 		Context: requestBody.Context,
 	}
 
@@ -56,9 +56,7 @@ func TempAsk(c *gin.Context) {
 	}
 
 	var response models.Response
-	if err := json.Unmarshal([]byte(body), &response); 
-
-	err != nil {
+	if err := json.Unmarshal([]byte(body), &response); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

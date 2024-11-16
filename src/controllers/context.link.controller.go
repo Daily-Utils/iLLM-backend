@@ -12,10 +12,10 @@ import (
 
 // TODO: Impliment array for DomainOfProvider
 type ContextRequestBodyForLink struct {
-	Link             string `json:"Link"`
-	ContextExtension string `json:"contextExtension"`
+	Link             string   `json:"Link"`
+	ContextExtension string   `json:"contextExtension"`
 	DomainOfProvider []string `json:"domainOfProvider"`
-	Model            string `json:"model"`
+	Model            string   `json:"model"`
 }
 
 type ContextResponseBodyForLink struct {
@@ -36,7 +36,7 @@ type ContextErrorResponseBodyForLink struct {
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
 // @Router /context/link [post]
-func ProvideContextForLink(c *gin.Context) {
+func (ctrl *Controller) ProvideContextForLink(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
@@ -78,9 +78,7 @@ func ProvideContextForLink(c *gin.Context) {
 	body := bodyContent
 
 	var response models.Response
-	if err := json.Unmarshal([]byte(body), &response); 
-
-	err != nil {
+	if err := json.Unmarshal([]byte(body), &response); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

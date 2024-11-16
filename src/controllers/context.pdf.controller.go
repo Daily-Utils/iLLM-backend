@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-
 // ProvideContextForPdf godoc
 // @Summary Provide context for PDF
 // @Description Provide context for the model for PDF
@@ -22,7 +20,7 @@ import (
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
 // @Router /context/pdf [post]
-func ProvideContextForPdf(c *gin.Context) {
+func (ctrl *Controller) ProvideContextForPdf(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
@@ -31,8 +29,7 @@ func ProvideContextForPdf(c *gin.Context) {
 	}
 
 	var requestBody models.RequestBodyForPDF
-	if err := json.Unmarshal(bodyBytes, &requestBody); 
-	err != nil {
+	if err := json.Unmarshal(bodyBytes, &requestBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
 		return
 	}

@@ -25,7 +25,7 @@ type ContextRequestBodyForPlainText struct {
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
 // @Router /context/plaintext [post]
-func ProvideContextForPlainText(c *gin.Context) {
+func (ctrl *Controller) ProvideContextForPlainText(c *gin.Context) {
 	bodyBytes, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
@@ -42,18 +42,17 @@ func ProvideContextForPlainText(c *gin.Context) {
 	prompt := "I, personally, think that the following text is very interesting. Please keep it in your context will ask you questions on this context: " + requestBody.Text
 
 	promptModel := models.Ask{
-			Model:  requestBody.Model,
-			Prompt: prompt,
-			Stream: false,
-		}
+		Model:  requestBody.Model,
+		Prompt: prompt,
+		Stream: false,
+	}
 
-		bodyContent, err := utils.RequestClient(promptModel)
+	bodyContent, err := utils.RequestClient(promptModel)
 
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	body := bodyContent
 	var response models.Response
