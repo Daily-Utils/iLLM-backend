@@ -35,7 +35,7 @@ type ContextErrorResponseBodyForDocx struct {
 // @Success 200 {object} models.Response
 // @Failure 500 {object} models.ResponseError
 // @Router /context/docx [post]
-func ProvideContextForDocx(c *gin.Context) {
+func (ctrl *Controller) ProvideContextForDocx(c *gin.Context) {
 	var requestBody models.ContextRequestBodyForDocx
 
 	if c.ContentType() == "multipart/form-data" {
