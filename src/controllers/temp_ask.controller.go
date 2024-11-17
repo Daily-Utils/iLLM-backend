@@ -61,5 +61,10 @@ func (ctrl *Controller) TempAsk(c *gin.Context) {
 		return
 	}
 
+	if err := utils.MongoInsertResponse(c, ctrl.MongoClient, response, "iLLM", "temp_responses"); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"response": response})
 }
